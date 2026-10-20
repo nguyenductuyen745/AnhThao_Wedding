@@ -1,0 +1,6 @@
+{
+  "name": "Thư Mời Lễ Cưới – Văn Thái & Thùy Trang",
+  "description": "Trân trọng kính mời quý khách tới tham dự Lễ Thành Hôn của Văn Thái & Thùy Trang vào ngày 03-04 tháng 10 năm 2026. Sự hiện diện và lời chúc phúc của bạn là niềm vinh dự cho gia đình chúng tôi!",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
