@@ -29,11 +29,57 @@ img {
   transition: transform 0.2s ease, background-color 0.2s ease !important;
   display: block !important;
 }
-
-.ladi-element.ladi-animation {
-  border-radius: 100px !important;
+/* Ensure animated elements are always visible and never blank white on mobile */
+.ladi-animation-hidden {
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
+#HEADLINE3, #PARAGRAPH2, #PARAGRAPH3, #PARAGRAPH4, #PARAGRAPH5, #PARAGRAPH7, #GROUP5,
+#IMAGE43, #IMAGE44, #IMAGE45, #IMAGE46, #IMAGE47, #IMAGE48, #IMAGE49, #IMAGE50, #IMAGE51,
+#IMAGE52, #PARAGRAPH48, #IMAGE67, #IMAGE68, #IMAGE69, #IMAGE70, #IMAGE71, #PARAGRAPH248,
+#PARAGRAPH249, #PARAGRAPH250, #GROUP4, #GROUP87, #IMAGE21 {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure smooth responsive mobile layout without horizontal jitter */
+html {
+  overflow-x: hidden !important;
+  width: 100% !important;
+}
+body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+.ladi-wraper {
+  width: 420px !important;
+  max-width: 420px !important;
+  margin: 0 auto !important;
+  position: relative !important;
+  overflow-x: hidden !important;
+  transform-origin: top center !important;
+}
+@media (max-width: 420px) {
+  .ladi-wraper {
+    max-width: none !important;
+    zoom: calc(100vw / 420) !important;
+  }
+}
+
+/* Bo tròn nút gửi mừng cưới, loại bỏ hoàn toàn viền vuông xung quanh */
+#GROUP22,
+#GROUP22 > .ladi-group,
+#BUTTON4,
+#BUTTON4 > .ladi-button {
+  border-radius: 100px !important;
+  outline: none !important;
+}
 #SECTION_POPUP .popup-close:hover,
 .popup-close:hover {
   background-color: #ffffff !important;

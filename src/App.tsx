@@ -379,6 +379,82 @@ function doGet(e) {
     };
     window.addEventListener('keydown', handleKeyDown);
 
+    // Safeguard for mobile devices: Ensure all elements are visible and never blank
+    const revealAllAnimatedElements = () => {
+      document.querySelectorAll('.ladi-animation-hidden').forEach((el) => {
+        el.classList.remove('ladi-animation-hidden');
+        (el as HTMLElement).style.setProperty('visibility', 'visible', 'important');
+        (el as HTMLElement).style.setProperty('opacity', '1', 'important');
+        (el as HTMLElement).style.setProperty('pointer-events', 'auto', 'important');
+      });
+    };
+    revealAllAnimatedElements();
+    window.addEventListener('scroll', revealAllAnimatedElements, { passive: true });
+    window.addEventListener('touchmove', revealAllAnimatedElements, { passive: true });
+    const revealInterval = setInterval(revealAllAnimatedElements, 300);
+    const clearTimer = setTimeout(() => clearInterval(revealInterval), 4000);
+
+    // Auto-scale mobile invitation to fit any mobile device screen (360px, 375px, 390px, 412px, etc.)
+    const handleResponsiveLayout = () => {
+      const winW = window.innerWidth || document.documentElement.clientWidth || screen.width;
+      const wraper = document.querySelector('.ladi-wraper') as HTMLElement;
+      if (!wraper) return;
+      if (winW < 420 && winW > 0) {
+        const ratio = winW / 420;
+        wraper.style.setProperty('zoom', String(ratio));
+        wraper.style.setProperty('width', '420px', 'important');
+        wraper.style.setProperty('max-width', 'none', 'important');
+        wraper.style.setProperty('margin', '0 auto', 'important');
+        wraper.style.setProperty('box-shadow', 'none', 'important');
+      } else {
+        wraper.style.removeProperty('zoom');
+        wraper.style.setProperty('width', '420px', 'important');
+        wraper.style.setProperty('max-width', '420px', 'important');
+        wraper.style.setProperty('margin', '0 auto', 'important');
+        wraper.style.setProperty('box-shadow', '0 10px 40px rgba(0, 0, 0, 0.12)', 'important');
+      }
+    };
+    handleResponsiveLayout();
+    window.addEventListener('resize', handleResponsiveLayout, { passive: true });
+    window.addEventListener('orientationchange', handleResponsiveLayout, { passive: true });
+
+    // Synchronize animation on Groom and Bride direction buttons
+    const syncDirectionButtonsAnimation = () => {
+      const groomBtn = document.getElementById('BUTTON10_GROOM');
+      const brideBtn = document.getElementById('BUTTON10');
+      if (groomBtn && !groomBtn.classList.contains('ladi-animation')) {
+        groomBtn.classList.add('ladi-animation');
+      }
+      if (brideBtn && !brideBtn.classList.contains('ladi-animation')) {
+        brideBtn.classList.add('ladi-animation');
+      }
+    };
+    syncDirectionButtonsAnimation();
+
+    // Default autoplay background music on initial entrance and interaction fallback
+    const ensureMusicAutoplay = () => {
+      const audio = document.getElementById('myAudio') as HTMLAudioElement;
+      const toggleBtn = document.getElementById('toggleMusic');
+      const icon = document.getElementById('musicIcon') as HTMLImageElement;
+      const iconPlay = 'https://img.icons8.com/ios-filled/50/ffffff/musical-notes.png';
+
+      if (audio && audio.paused) {
+        audio.play().then(() => {
+          if (icon) {
+            icon.src = iconPlay;
+            icon.classList.add('rotating');
+          }
+          if (toggleBtn) toggleBtn.classList.add('rippling');
+        }).catch(() => {
+          // Browser autoplay policy will allow on first user interaction
+        });
+      }
+    };
+    ensureMusicAutoplay();
+    ['click', 'touchstart', 'scroll', 'pointerdown'].forEach((evt) => {
+      window.addEventListener(evt, ensureMusicAutoplay, { once: true, passive: true });
+    });
+
     // 1. Check guest name from URL parameter ?Ten=
     try {
       const params = new URLSearchParams(window.location.search);
@@ -681,6 +757,10 @@ function doGet(e) {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keydown', handleEscapeKey);
       document.removeEventListener('click', handleGlobalClickCapture, true);
+      window.removeEventListener('scroll', revealAllAnimatedElements);
+      window.removeEventListener('touchmove', revealAllAnimatedElements);
+      clearInterval(revealInterval);
+      clearTimeout(clearTimer);
       if (btnCopyGroom) btnCopyGroom.removeEventListener('click', handleCopyGroom);
       if (btnCopyBride) btnCopyBride.removeEventListener('click', handleCopyBride);
       if (oldGroup87) oldGroup87.removeEventListener('click', handleCopyBride);
@@ -693,6 +773,12 @@ function doGet(e) {
   // Apply custom config to DOM in real-time
   const applyConfigToDOM = (newConfig: WeddingConfig) => {
     try {
+      document.querySelectorAll('.ladi-animation-hidden').forEach((el) => {
+        el.classList.remove('ladi-animation-hidden');
+        (el as HTMLElement).style.setProperty('visibility', 'visible', 'important');
+        (el as HTMLElement).style.setProperty('opacity', '1', 'important');
+        (el as HTMLElement).style.setProperty('pointer-events', 'auto', 'important');
+      });
       const h3 = document.querySelector('#HEADLINE3 .ladi-headline');
       if (h3) h3.innerHTML = `${newConfig.groomName} &amp; ${newConfig.brideName}`;
 
@@ -858,14 +944,20 @@ function doGet(e) {
       }
       if (config.groomMapsUrl) {
         outputHtml = outputHtml.replace(
-          'id="BUTTON10_GROOM" class=\'ladi-element\' href="https://maps.app.goo.gl/yjAQJgTpZjxhXgTw5"',
-          `id="BUTTON10_GROOM" class='ladi-element' href="${config.groomMapsUrl}"`
+          /id="BUTTON10_GROOM"[^>]*class=['"][^'"]*['"]/g,
+          `id="BUTTON10_GROOM" class='ladi-element ladi-animation'`
+        ).replace(
+          /id="BUTTON10_GROOM"[^>]*href=['"][^'"]*['"]/g,
+          `id="BUTTON10_GROOM" href="${config.groomMapsUrl}"`
         );
       }
       if (config.brideMapsUrl) {
         outputHtml = outputHtml.replace(
-          'id="BUTTON10" class=\'ladi-element\' href="https://maps.app.goo.gl/yjAQJgTpZjxhXgTw5"',
-          `id="BUTTON10" class='ladi-element' href="${config.brideMapsUrl}"`
+          /id="BUTTON10"[^>]*class=['"][^'"]*['"]/g,
+          `id="BUTTON10" class='ladi-element ladi-animation'`
+        ).replace(
+          /id="BUTTON10"[^>]*href=['"][^'"]*['"]/g,
+          `id="BUTTON10" href="${config.brideMapsUrl}"`
         );
       }
 
