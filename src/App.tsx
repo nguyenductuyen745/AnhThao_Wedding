@@ -88,6 +88,10 @@ interface WeddingConfig {
   bridePartyAddress?: string;
   brideMapsUrl?: string;
 
+  // Lời Cảm Ơn Cuối Thiệp
+  thankYouTitle?: string;
+  thankYouMessage?: string;
+
   // Cấu hình SEO & Chia Sẻ Mạng Xã Hội (Facebook, Zalo, Instagram, v.v.)
   seoTitle?: string;
   seoDescription?: string;
@@ -95,41 +99,46 @@ interface WeddingConfig {
 }
 
 const DEFAULT_CONFIG: WeddingConfig = {
-  groomName: 'Văn Thái',
-  brideName: 'Thùy Trang',
-  coupleTitle: 'Hoàng Thanh Huế & Hoàng Văn Phát',
-  brideParents: 'BỐ: Hoàng Văn Chung | MẸ: Lò Thị Hậu',
-  groomParents: 'BỐ: Hoàng Văn Tài | MẸ: Lừ Thị Tình',
-  brideAddress: 'Bản Chiềng Sàng, xã Yên Châu, tỉnh Sơn La',
-  groomAddress: 'Bản Chẹn, xã Tạ Khoa, tỉnh Sơn La',
-  partyDate: 'Thứ Bảy 03. 10. 2026 (Tức Ngày 23 Tháng 08 Năm Bính Ngọ)',
-  partyTime: '17:00',
-  ceremonyDate: 'Chủ Nhật 04. 10. 2026 (Tức Ngày 24 Tháng 08 Năm Bính Ngọ)',
-  ceremonyTime: '07:00',
-  venueAddress: 'Tam Tân, Tân An, TP Hải Phòng (Tân Hợp, Tân Phong, Ninh Giang, Hải Dương)',
+  groomName: 'Đức Ánh',
+  brideName: 'Phương Thảo',
+  coupleTitle: 'Nguyễn Phương Thảo & Nguyễn Đức Ánh',
+  brideParents: 'BỐ: Nguyễn Trọng Nghị<br>MẸ: Hà Thị Thúy',
+  groomParents: 'BỐ: Nguyễn Đức Hợp<br>MẸ: Nguyễn Thị Chầm',
+  brideAddress: 'Thôn Tích Giang 1, Xã Phúc Thọ, TP Hà Nội',
+  groomAddress: 'Thôn Canh Nậu 2, Tây Phương, Hà Nội',
+  partyDate: 'Chủ Nhật 15. 11. 2026 (Tức Ngày 07 Tháng 10 Năm Bính Ngọ)',
+  partyTime: '15:30',
+  ceremonyDate: 'Thứ Hai 16. 11. 2026 (Tức Ngày 08 Tháng 10 Năm Bính Ngọ)',
+  ceremonyTime: '13:30 - Thứ Hai',
+  venueAddress: 'Sn 4, Xóm Dốc Ao Thuyền, Thôn Canh Nậu 2, Tây Phương, Hà Nội',
 
   // Tiệc mừng: Nhà trai & Nhà gái
-  groomPartyAddress: 'Bản Chẹn, xã Tạ Khoa, tỉnh Sơn La',
-  groomMapsUrl: 'https://maps.app.goo.gl/yjAQJgTpZjxhXgTw5',
-  bridePartyAddress: 'Tam Tân, Tân An, TP Hải Phòng\n(Tân Hợp, Tân Phong, Ninh Giang, Hải Dương)',
-  brideMapsUrl: 'https://maps.app.goo.gl/yjAQJgTpZjxhXgTw5',
+  groomPartyAddress: 'Sn 4, Xóm Dốc Ao Thuyền,\nThôn Canh Nậu 2, Tây Phương, Hà Nội',
+  groomMapsUrl: 'https://maps.app.goo.gl/d4oj1nqgekesFoYG6?g_st=iz',
+  bridePartyAddress: 'Thôn Tích Giang 1, Xã Phúc Thọ, TP Hà Nội',
+  brideMapsUrl: 'https://maps.app.goo.gl/4vXb8imUK9uh2Qmu9?g_st=iz',
 
-  // Chú Rể
-  groomBankOwner: 'HOÀNG VĂN PHÁT',
-  groomBankNumber: '19036789999',
-  groomBankName: 'Techcombank',
-  groomQrUrl: 'https://img.vietqr.io/image/TCB-19036789999-compact2.png?amount=0&addInfo=Mung%20cuoi%20chu%20re&accountName=HOANG%20VAN%20PHAT',
+  // Lời cảm ơn cuối thiệp (Thank You)
+  thankYouTitle: 'Thank You',
+  thankYouMessage:
+    'Từ tận đáy lòng, chúng mình cảm ơn bạn đã dành tình cảm và sự hiện diện cho ngày vui này. Chính bạn đã góp phần làm nên một kỷ niệm hạnh phúc mà chúng mình sẽ luôn trân trọng.',
 
-  // Cô Dâu
-  brideBankOwner: 'BÙI THỊ HỒNG HẠNH',
-  brideBankNumber: '8993979999',
-  brideBankName: 'Techcombank',
-  brideQrUrl: 'https://img.vietqr.io/image/TCB-8993979999-compact2.png?amount=0&addInfo=Mung%20cuoi%20co%20dau&accountName=BUI%20THI%20HONG%20HANH',
+  // Chú Rể: Vietinbank
+  groomBankOwner: 'NGUYEN DUC ANH',
+  groomBankNumber: '100870535710',
+  groomBankName: 'Vietinbank',
+  groomQrUrl: 'https://img.vietqr.io/image/ICB-100870535710-compact2.png?amount=0&addInfo=Mung%20cuoi%20chu%20re%20Duc%20Anh&accountName=NGUYEN%20DUC%20ANH',
+
+  // Cô Dâu: MB bank
+  brideBankOwner: 'NGUYEN PHUONG THAO',
+  brideBankNumber: '0349168992',
+  brideBankName: 'MB bank',
+  brideQrUrl: 'https://img.vietqr.io/image/MB-0349168992-compact2.png?amount=0&addInfo=Mung%20cuoi%20co%20dau%20Phuong%20Thao&accountName=NGUYEN%20PHUONG%20THAO',
 
   // SEO & Social Sharing
-  seoTitle: 'Thư Mời Lễ Cưới – Văn Thái & Thùy Trang',
-  seoDescription: 'Trân trọng kính mời quý khách tới tham dự Lễ Thành Hôn của Văn Thái & Thùy Trang vào ngày 03-04 tháng 10 năm 2026. Sự hiện diện và lời chúc phúc của bạn là niềm vinh dự cho gia đình chúng tôi!',
-  seoImage: 'https://w.ladicdn.com/s650x800/644bd195fdccd700206206ea/imgi_25_cb4e0638acc8d-20251117034834-f4jjx-20260504073647-zjmsk.jpg',
+  seoTitle: 'Thư Mời Lễ Cưới – Đức Ánh & Phương Thảo',
+  seoDescription: 'Trân trọng kính mời quý khách tới tham dự Lễ Thành Hôn của Đức Ánh & Phương Thảo vào ngày 15-16 tháng 11 năm 2026. Sự hiện diện và lời chúc phúc của bạn là niềm vinh dự cho gia đình chúng tôi!',
+  seoImage: '/images/MB_03648.jpg',
 
   // Google Sheets
   googleSheetUrl:
@@ -137,12 +146,12 @@ const DEFAULT_CONFIG: WeddingConfig = {
     'https://script.google.com/macros/s/AKfycbwE_tPtNLaw_2fQgYW59izqTCcyt9mfqReKru89A3zRjph13eyNu015H3TbEP8KMCIAuQ/exec',
 
   // Legacy
-  bankOwner: 'BÙI THỊ HỒNG HẠNH',
-  bankNumber: '8993979999',
-  bankName: 'Techcombank',
+  bankOwner: 'NGUYEN PHUONG THAO',
+  bankNumber: '0349168992',
+  bankName: 'MB bank',
 
-  musicUrl: 'https://cdn.jsdelivr.net/gh/saygoodbyethe3-bit/music-hosting/50 Năm Về Sau.mp3',
-  mapsUrl: 'https://maps.app.goo.gl/yjAQJgTpZjxhXgTw5',
+  musicUrl: 'https://cdn.jsdelivr.net/gh/saygoodbyethe3-bit/music-hosting/50%20N%C4%83m%20V%E1%BB%81%20Sau.mp3',
+  mapsUrl: 'https://maps.app.goo.gl/d4oj1nqgekesFoYG6?g_st=iz',
 };
 
 export default function App() {
@@ -188,11 +197,13 @@ export default function App() {
       const saved = localStorage.getItem('wedding_custom_config');
       if (saved) {
         const parsed = JSON.parse(saved);
-        return {
-          ...DEFAULT_CONFIG,
-          ...parsed,
-          googleSheetUrl: parsed.googleSheetUrl || DEFAULT_CONFIG.googleSheetUrl,
-        };
+        if (parsed.groomName && parsed.groomName !== 'Văn Thái') {
+          return {
+            ...DEFAULT_CONFIG,
+            ...parsed,
+            googleSheetUrl: parsed.googleSheetUrl || DEFAULT_CONFIG.googleSheetUrl,
+          };
+        }
       }
     } catch (e) {
       console.error(e);
@@ -396,11 +407,12 @@ function doGet(e) {
 
     // Auto-scale mobile invitation to fit any mobile device screen (360px, 375px, 390px, 412px, etc.)
     const handleResponsiveLayout = () => {
-      const winW = window.innerWidth || document.documentElement.clientWidth || screen.width;
+      const clientW = document.documentElement.clientWidth || window.innerWidth || screen.width;
       const wraper = document.querySelector('.ladi-wraper') as HTMLElement;
       if (!wraper) return;
-      if (winW < 420 && winW > 0) {
-        const ratio = winW / 420;
+      if (clientW < 424 && clientW > 0) {
+        // Subtract 2px margin to ensure the right border is never clipped by scrollbars or fractional subpixel rendering
+        const ratio = Math.min(1, (clientW - 2) / 420);
         wraper.style.setProperty('zoom', String(ratio));
         wraper.style.setProperty('width', '420px', 'important');
         wraper.style.setProperty('max-width', 'none', 'important');
@@ -417,6 +429,48 @@ function doGet(e) {
     handleResponsiveLayout();
     window.addEventListener('resize', handleResponsiveLayout, { passive: true });
     window.addEventListener('orientationchange', handleResponsiveLayout, { passive: true });
+
+    // Tự động kiểm tra và đồng bộ ảnh từ thư mục images theo sheet data thật
+    const applyRealImagesFromFolder = () => {
+      const photoMap: Record<string, string> = {
+        IMAGE3: 'MB_03648',  // Ảnh bìa chính đầu thiệp
+        IMAGE16: 'MB_03617', // Ảnh thiệp mời (ảnh ngang - Trân Trọng Kính Mời)
+        IMAGE79: 'MB_03048', // Ảnh kỷ niệm 1
+        IMAGE80: 'MB_03263', // Ảnh kỷ niệm 2
+        IMAGE81: 'MB_03230', // Ảnh kỷ niệm 3
+        IMAGE44: 'MB_03629', // Album ảnh cưới 1
+        IMAGE45: 'MB_03456', // Album ảnh cưới 2
+        IMAGE43: 'MB_03275', // Album ảnh cưới 3
+        IMAGE46: 'MB_03720', // Album ảnh cưới 4
+        IMAGE47: 'MB_03474', // Album ảnh cưới 5
+        IMAGE48: 'MB_03013', // Album ảnh cưới 6
+        IMAGE51: 'MB_03595', // Album ảnh cưới 7
+        IMAGE52: 'MB_03698', // Album ảnh cưới 8
+        IMAGE49: 'MB_03069', // Album ảnh cưới 9
+        IMAGE50: 'MB_03414', // Album ảnh cưới 10
+        IMAGE60: 'MB_03670', // Ảnh Cảm ơn chân trang (Thank You)
+      };
+
+      Object.entries(photoMap).forEach(([elId, fileName]) => {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        const bgEl = el.querySelector('.ladi-image-background') as HTMLElement;
+        if (!bgEl) return;
+
+        // Thử các định dạng phổ biến: .jpg, .JPG, .jpeg, .png, .webp
+        const formats = ['.jpg', '.JPG', '.jpeg', '.png', '.webp'];
+        formats.forEach((ext) => {
+          const testImg = new Image();
+          testImg.src = `/images/${fileName}${ext}`;
+          testImg.onload = () => {
+            bgEl.style.setProperty('background-image', `url('/images/${fileName}${ext}')`, 'important');
+            bgEl.style.setProperty('background-size', 'cover', 'important');
+            bgEl.style.setProperty('background-position', 'center center', 'important');
+          };
+        });
+      });
+    };
+    applyRealImagesFromFolder();
 
     // Synchronize animation on Groom and Bride direction buttons
     const syncDirectionButtonsAnimation = () => {
@@ -785,8 +839,11 @@ function doGet(e) {
       const h4 = document.querySelector('#HEADLINE4 .ladi-headline');
       if (h4) h4.textContent = newConfig.coupleTitle;
 
-      const pBrideParents = document.querySelector('#PARAGRAPH7 .ladi-paragraph');
-      if (pBrideParents) pBrideParents.innerHTML = newConfig.brideParents;
+      const pBrideParents7 = document.querySelector('#PARAGRAPH7 .ladi-paragraph');
+      if (pBrideParents7) pBrideParents7.innerHTML = '';
+
+      const pBrideParents8 = document.querySelector('#PARAGRAPH8 .ladi-paragraph');
+      if (pBrideParents8) pBrideParents8.innerHTML = newConfig.brideParents;
 
       const pGroomParents = document.querySelector('#PARAGRAPH9 .ladi-paragraph');
       if (pGroomParents) pGroomParents.innerHTML = newConfig.groomParents;
@@ -800,24 +857,68 @@ function doGet(e) {
       // Update Tiệc Mừng Lễ Cưới: Tư Gia Nhà Trai & Tư Gia Nhà Gái
       const pPartyGroom = document.querySelector('#PARAGRAPH245_GROOM .ladi-paragraph');
       if (pPartyGroom) {
-        const groomAddr = newConfig.groomPartyAddress || newConfig.groomAddress || 'Bản Chẹn, xã Tạ Khoa, tỉnh Sơn La';
+        const groomAddr = newConfig.groomPartyAddress || newConfig.groomAddress || 'Sn 4, Xóm Dốc Ao Thuyền,\nThôn Canh Nậu 2, Tây Phương, Hà Nội';
         pPartyGroom.innerHTML = groomAddr.replace(/\n/g, '<br>');
       }
 
       const btnGroomMaps = document.getElementById('BUTTON10_GROOM') as HTMLAnchorElement;
       if (btnGroomMaps) {
-        btnGroomMaps.href = newConfig.groomMapsUrl || newConfig.mapsUrl || 'https://maps.app.goo.gl/yjAQJgTpZjxhXgTw5';
+        btnGroomMaps.href = newConfig.groomMapsUrl || newConfig.mapsUrl || 'https://maps.app.goo.gl/d4oj1nqgekesFoYG6?g_st=iz';
       }
 
       const pPartyBride = document.querySelector('#PARAGRAPH245 .ladi-paragraph');
       if (pPartyBride) {
-        const brideAddr = newConfig.bridePartyAddress || 'Tam Tân, Tân An, TP Hải Phòng<br>(Tân Hợp, Tân Phong, Ninh Giang, Hải Dương)';
+        const brideAddr = newConfig.bridePartyAddress || 'Thôn Tích Giang 1, Xã Phúc Thọ, TP Hà Nội';
         pPartyBride.innerHTML = brideAddr.replace(/\n/g, '<br>');
       }
 
       const btnBrideMaps = document.getElementById('BUTTON10') as HTMLAnchorElement;
       if (btnBrideMaps) {
-        btnBrideMaps.href = newConfig.brideMapsUrl || newConfig.mapsUrl || 'https://maps.app.goo.gl/yjAQJgTpZjxhXgTw5';
+        btnBrideMaps.href = newConfig.brideMapsUrl || newConfig.mapsUrl || 'https://maps.app.goo.gl/4vXb8imUK9uh2Qmu9?g_st=iz';
+      }
+
+      // Update Dates across the invitation card
+      const pSaveDate = document.querySelector('#PARAGRAPH2 .ladi-paragraph');
+      if (pSaveDate) pSaveDate.textContent = '16. 11 . 2026';
+
+      const p248 = document.querySelector('#PARAGRAPH248 .ladi-paragraph');
+      if (p248) p248.textContent = '15';
+
+      const p249 = document.querySelector('#PARAGRAPH249 .ladi-paragraph');
+      if (p249) p249.textContent = '11';
+
+      const p250 = document.querySelector('#PARAGRAPH250 .ladi-paragraph');
+      if (p250) p250.textContent = '2026';
+
+      const p229 = document.querySelector('#PARAGRAPH229 .ladi-paragraph');
+      if (p229) p229.innerHTML = '15:30 - Chủ Nhật<br>';
+
+      const p230 = document.querySelector('#PARAGRAPH230 .ladi-paragraph');
+      if (p230) p230.innerHTML = '15. 11. 2026<br>';
+
+      const p231 = document.querySelector('#PARAGRAPH231 .ladi-paragraph');
+      if (p231) p231.textContent = '( Tức Ngày 07 Tháng 10 Năm Bính Ngọ )';
+
+      const p260 = document.querySelector('#PARAGRAPH260 .ladi-paragraph');
+      if (p260) p260.innerHTML = '13:30 - Thứ Hai<br>';
+
+      const p261 = document.querySelector('#PARAGRAPH261 .ladi-paragraph');
+      if (p261) p261.innerHTML = '16. 11. 2026<br>';
+
+      const p262 = document.querySelector('#PARAGRAPH262 .ladi-paragraph');
+      if (p262) p262.textContent = '( Tức Ngày 08 Tháng 10 Năm Bính Ngọ )';
+
+      const p263 = document.querySelector('#PARAGRAPH263 .ladi-paragraph');
+      if (p263) p263.innerHTML = 'TƯ GIA NHÀ TRAI<br>';
+
+      const pCalMonth = document.querySelector('#PARAGRAPH12 .ladi-paragraph');
+      if (pCalMonth) pCalMonth.textContent = 'Tháng 11 - 2026';
+
+      // Định vị trái tim đỏ Save The Date vào đúng ngày 16.11.2026
+      const imgHeart = document.getElementById('IMAGE69');
+      if (imgHeart) {
+        imgHeart.style.setProperty('top', '128px', 'important');
+        imgHeart.style.setProperty('left', '189.4px', 'important');
       }
 
       // Update Groom bank info in POPUP2

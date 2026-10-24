@@ -64,11 +64,21 @@ body {
   position: relative !important;
   overflow-x: hidden !important;
   transform-origin: top center !important;
+  box-sizing: border-box !important;
 }
-@media (max-width: 420px) {
+/* Pin right decorative borders inside 420px canvas so they are never clipped by scrollbars */
+#IMAGE11, #IMAGE13, #IMAGE26, #IMAGE83, #IMAGE86, #IMAGE54, #IMAGE56, #IMAGE58, #IMAGE61, #IMAGE85 {
+  right: 0.5px !important;
+  left: auto !important;
+}
+@media (max-width: 424px) {
+  body {
+    background-image: none !important;
+    background-color: #fff !important;
+  }
   .ladi-wraper {
+    box-shadow: none !important;
     max-width: none !important;
-    zoom: calc(100vw / 420) !important;
   }
 }
 

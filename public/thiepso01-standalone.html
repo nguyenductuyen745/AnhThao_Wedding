@@ -352,9 +352,13 @@
 #PARAGRAPH245_GROOM > .ladi-paragraph {
   font-family: Quicksand, sans-serif !important;
   font-size: 13px !important;
-  line-height: 1.6 !important;
+  line-height: 1.4 !important;
   color: rgb(255, 255, 255) !important;
   text-align: center !important;
+  padding: 0 40px !important;
+  box-sizing: border-box !important;
+  white-space: normal !important;
+  word-break: break-word !important;
 }
 
 /* TƯ GIA NHÀ GÁI (Vị trí ngay dưới nhà trai) */
@@ -469,25 +473,41 @@
   transform: translateY(-0.5px) !important;
 }
 
-/* Dịch chuyển LỄ THÀNH HÔN xuống dưới để bố cục hài hòa */
+/* Ẩn PARAGRAPH7 thừa để tránh lỗi chữ đè nhau ở bố mẹ nhà gái (chỉ dùng PARAGRAPH8) */
+#PARAGRAPH7 {
+  display: none !important;
+}
+#PARAGRAPH8 {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Vị trí trái tim đỏ Save The Date chính xác ngày 16.11.2026 */
+#IMAGE69 {
+  top: 128px !important;
+  left: 189.4px !important;
+}
+
+/* Dịch chuyển LỄ THÀNH HÔN và căn chỉnh chuẩn theo form cũ */
 #BOX24 {
-  top: 965px !important;
+  top: 945px !important;
   height: 208.13px !important;
 }
 #PARAGRAPH259 {
-  top: 990.44px !important;
+  top: 965px !important;
 }
 #PARAGRAPH260 {
-  top: 1023.44px !important;
+  top: 998px !important;
 }
 #PARAGRAPH261 {
-  top: 1052.44px !important;
+  top: 1027px !important;
 }
 #PARAGRAPH262 {
-  top: 1085.44px !important;
+  top: 1060px !important;
 }
 #PARAGRAPH263 {
-  top: 1117.44px !important;
+  top: 1092px !important;
 }
 
 /* Đường border vàng chạy liền mạch mép trái và mép phải, không bị đứt đoạn */
