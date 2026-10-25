@@ -138,7 +138,7 @@ const DEFAULT_CONFIG: WeddingConfig = {
   // SEO & Social Sharing
   seoTitle: 'Thư Mời Lễ Cưới – Đức Ánh & Phương Thảo',
   seoDescription: 'Trân trọng kính mời quý khách tới tham dự Lễ Thành Hôn của Đức Ánh & Phương Thảo vào ngày 15-16 tháng 11 năm 2026. Sự hiện diện và lời chúc phúc của bạn là niềm vinh dự cho gia đình chúng tôi!',
-  seoImage: '/images/MB_03648.jpg',
+  seoImage: 'https://anhthao.vercel.app/images/og-share.jpg?v=2',
 
   // Google Sheets
   googleSheetUrl:
@@ -998,11 +998,18 @@ function doGet(e) {
       const ogDesc = document.querySelector('meta[property="og:description"]');
       if (ogDesc) ogDesc.setAttribute('content', newConfig.seoDescription || DEFAULT_CONFIG.seoDescription!);
 
+      const rawImg = newConfig.seoImage || DEFAULT_CONFIG.seoImage || 'https://anhthao.vercel.app/images/og-share.jpg?v=2';
+      const resolvedSeoImage = rawImg.startsWith('http')
+        ? rawImg
+        : (typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost') && !window.location.origin.includes('3000'))
+          ? `${window.location.origin}${rawImg.startsWith('/') ? '' : '/'}${rawImg}`
+          : `https://anhthao.vercel.app/images/og-share.jpg?v=2`;
+
       const ogImg = document.querySelector('meta[property="og:image"]');
-      if (ogImg && newConfig.seoImage) ogImg.setAttribute('content', newConfig.seoImage);
+      if (ogImg) ogImg.setAttribute('content', resolvedSeoImage);
 
       const ogImgSec = document.querySelector('meta[property="og:image:secure_url"]');
-      if (ogImgSec && newConfig.seoImage) ogImgSec.setAttribute('content', newConfig.seoImage);
+      if (ogImgSec) ogImgSec.setAttribute('content', resolvedSeoImage);
 
       const twTitle = document.querySelector('meta[name="twitter:title"]');
       if (twTitle) twTitle.setAttribute('content', currentTitle);
@@ -1011,7 +1018,10 @@ function doGet(e) {
       if (twDesc) twDesc.setAttribute('content', newConfig.seoDescription || DEFAULT_CONFIG.seoDescription!);
 
       const twImg = document.querySelector('meta[name="twitter:image"]');
-      if (twImg && newConfig.seoImage) twImg.setAttribute('content', newConfig.seoImage);
+      if (twImg) twImg.setAttribute('content', resolvedSeoImage);
+
+      const linkImg = document.querySelector('link[rel="image_src"]');
+      if (linkImg) linkImg.setAttribute('href', resolvedSeoImage);
 
       localStorage.setItem('wedding_custom_config', JSON.stringify(newConfig));
       showToast('✓ Đã cập nhật thông tin lên thiệp cưới thành công!');
@@ -1054,12 +1064,18 @@ function doGet(e) {
     if (config !== DEFAULT_CONFIG) {
       outputHtml = outputHtml
         .replace(/Văn Thái &amp; Thùy Trang/g, `${config.groomName} &amp; ${config.brideName}`)
+        .replace(/Đức Ánh &amp; Phương Thảo/g, `${config.groomName} &amp; ${config.brideName}`)
         .replace(/Hoàng Thanh Huế &amp; Hoàng Văn Phát/g, config.coupleTitle)
+        .replace(/Nguyễn Phương Thảo &amp; Nguyễn Đức Ánh/g, config.coupleTitle)
         .replace(/HOÀNG VĂN PHÁT/g, config.groomBankOwner)
+        .replace(/NGUYEN DUC ANH/g, config.groomBankOwner)
         .replace(/19036789999/g, config.groomBankNumber)
+        .replace(/100870535710/g, config.groomBankNumber)
         .replace(/BUI THI HONG HANH/g, config.brideBankOwner)
         .replace(/BÙI THỊ HỒNG HẠNH/g, config.brideBankOwner)
-        .replace(/8993979999/g, config.brideBankNumber);
+        .replace(/NGUYEN PHUONG THAO/g, config.brideBankOwner)
+        .replace(/8993979999/g, config.brideBankNumber)
+        .replace(/0349168992/g, config.brideBankNumber);
 
       if (config.groomPartyAddress) {
         outputHtml = outputHtml.replace(
@@ -1089,22 +1105,22 @@ function doGet(e) {
       const finalTitle = config.seoTitle || `Thư Mời Lễ Cưới – ${config.groomName} &amp; ${config.brideName}`;
       outputHtml = outputHtml
         .replace(/<title>.*?<\/title>/g, `<title>${finalTitle}</title>`)
-        .replace(/content="Thư Mời Lễ Cưới – Văn Thái &amp; Thùy Trang"/g, `content="${finalTitle}"`);
+        .replace(/<meta property="og:title" content=".*?"/g, `<meta property="og:title" content="${finalTitle}"`)
+        .replace(/<meta name="twitter:title" content=".*?"/g, `<meta name="twitter:title" content="${finalTitle}"`);
 
       if (config.seoDescription) {
         outputHtml = outputHtml
-          .replace(
-            /content="Trân trọng kính mời quý khách tới tham dự Lễ Thành Hôn của Văn Thái &amp; Thùy Trang vào ngày 03-04 tháng 10 năm 2026. Sự hiện diện và lời chúc phúc của bạn là niềm vinh dự cho gia đình chúng tôi!"/g,
-            `content="${config.seoDescription}"`
-          );
+          .replace(/<meta name="description" content=".*?"/g, `<meta name="description" content="${config.seoDescription}"`)
+          .replace(/<meta property="og:description" content=".*?"/g, `<meta property="og:description" content="${config.seoDescription}"`)
+          .replace(/<meta name="twitter:description" content=".*?"/g, `<meta name="twitter:description" content="${config.seoDescription}"`);
       }
 
       if (config.seoImage) {
         outputHtml = outputHtml
-          .replace(
-            /https:\/\/w\.ladicdn\.com\/s650x800\/644bd195fdccd700206206ea\/imgi_25_cb4e0638acc8d-20251117034834-f4jjx-20260504073647-zjmsk\.jpg/g,
-            config.seoImage
-          );
+          .replace(/<meta property="og:image" content=".*?"/g, `<meta property="og:image" content="${config.seoImage}"`)
+          .replace(/<meta property="og:image:secure_url" content=".*?"/g, `<meta property="og:image:secure_url" content="${config.seoImage}"`)
+          .replace(/<meta name="twitter:image" content=".*?"/g, `<meta name="twitter:image" content="${config.seoImage}"`)
+          .replace(/<link rel="image_src" href=".*?"/g, `<link rel="image_src" href="${config.seoImage}"`);
       }
     }
 
