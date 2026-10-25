@@ -432,42 +432,39 @@ function doGet(e) {
 
     // Tự động kiểm tra và đồng bộ ảnh từ thư mục images theo sheet data thật
     const applyRealImagesFromFolder = () => {
-      const photoMap: Record<string, string> = {
-        IMAGE3: 'MB_03648',  // Ảnh bìa chính đầu thiệp
-        IMAGE16: 'MB_03617', // Ảnh thiệp mời (ảnh ngang - Trân Trọng Kính Mời)
-        IMAGE79: 'MB_03048', // Ảnh kỷ niệm 1
-        IMAGE80: 'MB_03263', // Ảnh kỷ niệm 2
-        IMAGE81: 'MB_03230', // Ảnh kỷ niệm 3
-        IMAGE44: 'MB_03629', // Album ảnh cưới 1
-        IMAGE45: 'MB_03456', // Album ảnh cưới 2
-        IMAGE43: 'MB_03275', // Album ảnh cưới 3
-        IMAGE46: 'MB_03720', // Album ảnh cưới 4
-        IMAGE47: 'MB_03474', // Album ảnh cưới 5
-        IMAGE48: 'MB_03013', // Album ảnh cưới 6
-        IMAGE51: 'MB_03595', // Album ảnh cưới 7
-        IMAGE52: 'MB_03698', // Album ảnh cưới 8
-        IMAGE49: 'MB_03069', // Album ảnh cưới 9
-        IMAGE50: 'MB_03414', // Album ảnh cưới 10
-        IMAGE60: 'MB_03670', // Ảnh Cảm ơn chân trang (Thank You)
+      const photoMap: Record<string, { file: string; pos?: string }> = {
+        IMAGE3: { file: 'MB_03648', pos: 'center 20%' },  // Ảnh bìa chính đầu thiệp
+        IMAGE16: { file: 'MB_03617', pos: 'center center' }, // Ảnh thiệp mời (ảnh ngang - Trân Trọng Kính Mời)
+        IMAGE79: { file: 'MB_03048', pos: 'center 20%' }, // Ảnh kỷ niệm 1
+        IMAGE80: { file: 'MB_03263', pos: 'center 20%' }, // Ảnh kỷ niệm 2
+        IMAGE81: { file: 'MB_03230', pos: 'center 20%' }, // Ảnh kỷ niệm 3
+        IMAGE44: { file: 'MB_03629', pos: 'center 20%' }, // Album ảnh cưới 1
+        IMAGE45: { file: 'MB_03456', pos: 'center 20%' }, // Album ảnh cưới 2
+        IMAGE43: { file: 'MB_03275', pos: 'center 20%' }, // Album ảnh cưới 3
+        IMAGE46: { file: 'MB_03720', pos: 'center 20%' }, // Album ảnh cưới 4
+        IMAGE47: { file: 'MB_03474', pos: 'center 20%' }, // Album ảnh cưới 5
+        IMAGE48: { file: 'MB_03013', pos: 'center 20%' }, // Album ảnh cưới 6
+        IMAGE51: { file: 'MB_03595', pos: 'center 20%' }, // Album ảnh cưới 7
+        IMAGE52: { file: 'MB_03698', pos: 'center 20%' }, // Album ảnh cưới 8
+        IMAGE49: { file: 'MB_03069', pos: 'center 20%' }, // Album ảnh cưới 9
+        IMAGE50: { file: 'MB_03414', pos: 'center 20%' }, // Album ảnh cưới 10
+        IMAGE59: { file: 'MB_03670', pos: 'center 15%' }, // Ảnh Cảm ơn chân trang (Thank You) - IMAGE59, KHÔNG chạm vào IMAGE60!
       };
 
-      Object.entries(photoMap).forEach(([elId, fileName]) => {
+      Object.entries(photoMap).forEach(([elId, item]) => {
         const el = document.getElementById(elId);
         if (!el) return;
         const bgEl = el.querySelector('.ladi-image-background') as HTMLElement;
         if (!bgEl) return;
 
-        // Thử các định dạng phổ biến: .jpg, .JPG, .jpeg, .png, .webp
-        const formats = ['.jpg', '.JPG', '.jpeg', '.png', '.webp'];
-        formats.forEach((ext) => {
-          const testImg = new Image();
-          testImg.src = `/images/${fileName}${ext}`;
-          testImg.onload = () => {
-            bgEl.style.setProperty('background-image', `url('/images/${fileName}${ext}')`, 'important');
-            bgEl.style.setProperty('background-size', 'cover', 'important');
-            bgEl.style.setProperty('background-position', 'center center', 'important');
-          };
-        });
+        bgEl.style.setProperty('background-image', `url('/images/${item.file}.jpg')`, 'important');
+        bgEl.style.setProperty('background-size', 'cover', 'important');
+        bgEl.style.setProperty('background-repeat', 'no-repeat', 'important');
+        bgEl.style.setProperty('background-position', item.pos || 'center center', 'important');
+        bgEl.style.setProperty('width', '100%', 'important');
+        bgEl.style.setProperty('height', '100%', 'important');
+        bgEl.style.setProperty('top', '0px', 'important');
+        bgEl.style.setProperty('left', '0px', 'important');
       });
     };
     applyRealImagesFromFolder();
@@ -914,11 +911,26 @@ function doGet(e) {
       const pCalMonth = document.querySelector('#PARAGRAPH12 .ladi-paragraph');
       if (pCalMonth) pCalMonth.textContent = 'Tháng 11 - 2026';
 
-      // Định vị trái tim đỏ Save The Date vào đúng ngày 16.11.2026
+      // Cập nhật thứ trong tuần (Tháng 11/2026: Ngày 1 là Chủ Nhật - CN)
+      const hlMap: { [key: string]: string } = {
+        HEADLINE47: 'CN<br>',
+        HEADLINE48: 'T2<br>',
+        HEADLINE49: 'T3<br>',
+        HEADLINE50: 'T4<br>',
+        HEADLINE51: 'T5<br>',
+        HEADLINE52: 'T6<br>',
+        HEADLINE53: 'T7<br>',
+      };
+      Object.entries(hlMap).forEach(([id, text]) => {
+        const el = document.querySelector(`#${id} .ladi-headline`);
+        if (el) el.innerHTML = text;
+      });
+
+      // Định vị trái tim đỏ Save The Date vào đúng ngày 16.11.2026 (Thứ Hai - Col T2, Hàng 3)
       const imgHeart = document.getElementById('IMAGE69');
       if (imgHeart) {
         imgHeart.style.setProperty('top', '128px', 'important');
-        imgHeart.style.setProperty('left', '189.4px', 'important');
+        imgHeart.style.setProperty('left', '48.6px', 'important');
       }
 
       // Update Groom bank info in POPUP2
@@ -959,6 +971,18 @@ function doGet(e) {
       const audioEl = document.getElementById('myAudio') as HTMLAudioElement;
       if (audioEl && newConfig.musicUrl) {
         audioEl.src = newConfig.musicUrl;
+      }
+
+      // Update Lời Cảm Ơn Cuối Thiệp (Thank You section)
+      const pThankYouTitle = document.querySelector('#PARAGRAPH48 .ladi-paragraph');
+      if (pThankYouTitle) {
+        pThankYouTitle.textContent = newConfig.thankYouTitle || DEFAULT_CONFIG.thankYouTitle || 'Thank You';
+      }
+
+      const pThankYouMessage = document.querySelector('#PARAGRAPH49 .ladi-paragraph');
+      if (pThankYouMessage) {
+        const msg = newConfig.thankYouMessage || DEFAULT_CONFIG.thankYouMessage || 'Từ tận đáy lòng, chúng mình cảm ơn bạn đã dành tình cảm và sự hiện diện cho ngày vui này. Chính bạn đã góp phần làm nên một kỷ niệm hạnh phúc mà chúng mình sẽ luôn trân trọng.';
+        pThankYouMessage.innerHTML = msg.replace(/\n/g, '<br>');
       }
 
       // Update SEO & Social sharing meta tags (Facebook, Zalo, Instagram, iMessage)
@@ -1718,6 +1742,34 @@ function doGet(e) {
                       <p className="text-xs text-stone-400">Mặc định: "50 Năm Về Sau.mp3".</p>
                     </div>
 
+                    {/* Lời Cảm Ơn Cuối Thiệp (Thank You) */}
+                    <div className="bg-stone-950/60 border border-stone-800 rounded-2xl p-4 space-y-3">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+                        <Heart className="w-3.5 h-3.5" />
+                        6. Lời Cảm Ơn Cuối Thiệp (Thank You)
+                      </h4>
+                      <div>
+                        <label className="text-xs text-stone-400">Tiêu đề cảm ơn</label>
+                        <input
+                          type="text"
+                          value={config.thankYouTitle || ''}
+                          onChange={(e) => setConfig({ ...config, thankYouTitle: e.target.value })}
+                          className="w-full mt-1 bg-stone-900 border border-stone-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                          placeholder="Thank You"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-stone-400">Nội dung cảm ơn chân thành</label>
+                        <textarea
+                          rows={3}
+                          value={config.thankYouMessage || ''}
+                          onChange={(e) => setConfig({ ...config, thankYouMessage: e.target.value })}
+                          className="w-full mt-1 bg-stone-900 border border-stone-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 resize-none"
+                          placeholder="Từ tận đáy lòng, chúng mình cảm ơn bạn đã dành tình cảm và sự hiện diện cho ngày vui này..."
+                        />
+                      </div>
+                    </div>
+
                     {/* Google Sheets Integration */}
                     <div className="md:col-span-2 bg-gradient-to-r from-emerald-950/40 via-stone-950/70 to-teal-950/40 border border-emerald-500/30 rounded-2xl p-5 space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -1727,7 +1779,7 @@ function doGet(e) {
                           </div>
                           <div>
                             <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                              <span>6. Đồng Bộ Google Sheets (Tự Động Lưu Khách Mời &amp; Lời Chúc)</span>
+                              <span>7. Đồng Bộ Google Sheets (Tự Động Lưu Khách Mời &amp; Lời Chúc)</span>
                               <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold border ${
                                 config.googleSheetUrl
                                   ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
