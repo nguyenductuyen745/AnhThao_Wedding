@@ -145,17 +145,17 @@ const DEFAULT_CONFIG: WeddingConfig = {
     (import.meta as any).env?.VITE_GOOGLE_SHEETS_SCRIPT_URL ||
     'https://script.google.com/macros/s/AKfycbwE_tPtNLaw_2fQgYW59izqTCcyt9mfqReKru89A3zRjph13eyNu015H3TbEP8KMCIAuQ/exec',
 
-  // Legacy
   bankOwner: 'NGUYEN PHUONG THAO',
   bankNumber: '0349168992',
   bankName: 'MB bank',
 
-  musicUrl: 'https://cdn.jsdelivr.net/gh/saygoodbyethe3-bit/music-hosting/50%20N%C4%83m%20V%E1%BB%81%20Sau.mp3',
+  musicUrl: '/audio/beautiful-in-white.mp3',
   mapsUrl: 'https://maps.app.goo.gl/d4oj1nqgekesFoYG6?g_st=iz',
 };
 
 export default function App() {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isGiftModalOpen, setIsGiftModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'download' | 'customizer' | 'rsvps' | 'code' | 'guide'>('download');
   const [copiedCode, setCopiedCode] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -198,9 +198,11 @@ export default function App() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.groomName && parsed.groomName !== 'Văn Thái') {
+          const isOldMusic = !parsed.musicUrl || parsed.musicUrl.includes('50%20N') || parsed.musicUrl.includes('50 Năm Về Sau');
           return {
             ...DEFAULT_CONFIG,
             ...parsed,
+            musicUrl: isOldMusic ? '/audio/beautiful-in-white.mp3' : parsed.musicUrl,
             googleSheetUrl: parsed.googleSheetUrl || DEFAULT_CONFIG.googleSheetUrl,
           };
         }
@@ -438,16 +440,24 @@ function doGet(e) {
         IMAGE79: { file: 'MB_03048', pos: 'center 20%' }, // Ảnh kỷ niệm 1
         IMAGE80: { file: 'MB_03263', pos: 'center 20%' }, // Ảnh kỷ niệm 2
         IMAGE81: { file: 'MB_03230', pos: 'center 20%' }, // Ảnh kỷ niệm 3
-        IMAGE44: { file: 'MB_03629', pos: 'center 20%' }, // Album ảnh cưới 1
-        IMAGE45: { file: 'MB_03456', pos: 'center 20%' }, // Album ảnh cưới 2
-        IMAGE43: { file: 'MB_03275', pos: 'center 20%' }, // Album ảnh cưới 3
-        IMAGE46: { file: 'MB_03720', pos: 'center 20%' }, // Album ảnh cưới 4
-        IMAGE47: { file: 'MB_03474', pos: 'center 20%' }, // Album ảnh cưới 5
-        IMAGE48: { file: 'MB_03013', pos: 'center 20%' }, // Album ảnh cưới 6
-        IMAGE51: { file: 'MB_03595', pos: 'center 20%' }, // Album ảnh cưới 7
-        IMAGE52: { file: 'MB_03698', pos: 'center 20%' }, // Album ảnh cưới 8
-        IMAGE49: { file: 'MB_03069', pos: 'center 20%' }, // Album ảnh cưới 9
-        IMAGE50: { file: 'MB_03414', pos: 'center 20%' }, // Album ảnh cưới 10
+
+        // Album 10 ảnh cưới theo thứ tự chính xác 2 ảnh đính kèm của người dùng:
+        // Hàng 1:
+        IMAGE47: { file: 'MB_03629', pos: 'center 20%' }, // Hàng 1 Trái: Chú rể vest trắng & Cô dâu váy cưới xòe bên rèm cửa
+        IMAGE44: { file: 'MB_03456', pos: 'center 20%' }, // Hàng 1 Phải: Áo dài truyền thống, cô dâu cầm quạt
+        // Hàng 2:
+        IMAGE45: { file: 'MB_03275', pos: 'center 20%' }, // Hàng 2 Trái: Chú rể giấu hoa sau lưng, cô dâu tạo dáng trái tim
+        IMAGE46: { file: 'MB_03720', pos: 'center 20%' }, // Hàng 2 Phải: Chú rể trùm voan hôn trán cô dâu giữa đồi thông
+        // Hàng 3:
+        IMAGE43: { file: 'MB_03474', pos: 'center 20%' }, // Hàng 3 Trái: Cặp đôi mặc áo dài nhìn xuống bó hoa cưới
+        IMAGE48: { file: 'MB_03013', pos: 'center 20%' }, // Hàng 3 Phải: Chú rể vest đen ngồi cùng cô dâu váy bồng bềnh
+        // Hàng 4:
+        IMAGE50: { file: 'MB_03595', pos: 'center 20%' }, // Hàng 4 Trái: Cận cảnh chú rể chạm trán cô dâu ôm hoa cưới
+        IMAGE49: { file: 'MB_03698', pos: 'center 20%' }, // Hàng 4 Phải: Cặp đôi nắm tay nhảy múa trên bãi cỏ xanh
+        // Hàng 5:
+        IMAGE52: { file: 'MB_03069', pos: 'center 20%' }, // Hàng 5 Trái: Cặp đôi đứng tạo dáng dưới vòm hoa cưới
+        IMAGE51: { file: 'MB_03414', pos: 'center 20%' }, // Hàng 5 Phải: Cặp đôi mặc áo dài tung cánh hoa hồng đỏ
+
         IMAGE59: { file: 'MB_03670', pos: 'center 15%' }, // Ảnh Cảm ơn chân trang (Thank You) - IMAGE59, KHÔNG chạm vào IMAGE60!
       };
 
@@ -482,23 +492,34 @@ function doGet(e) {
     };
     syncDirectionButtonsAnimation();
 
-    // Default autoplay background music on initial entrance and interaction fallback
+    // Default autoplay background music (Beautiful in White) on initial entrance and interaction fallback
     const ensureMusicAutoplay = () => {
       const audio = document.getElementById('myAudio') as HTMLAudioElement;
       const toggleBtn = document.getElementById('toggleMusic');
       const icon = document.getElementById('musicIcon') as HTMLImageElement;
       const iconPlay = 'https://img.icons8.com/ios-filled/50/ffffff/musical-notes.png';
 
-      if (audio && audio.paused) {
-        audio.play().then(() => {
-          if (icon) {
-            icon.src = iconPlay;
-            icon.classList.add('rotating');
+      if (audio) {
+        const expectedSrc = config.musicUrl || '/audio/beautiful-in-white.mp3';
+        const current = audio.currentSrc || audio.src || '';
+        if (!current.includes('beautiful-in-white.mp3')) {
+          audio.src = expectedSrc;
+          audio.load();
+        }
+        if (audio.paused) {
+          const p = audio.play();
+          if (p !== undefined) {
+            p.then(() => {
+              if (icon) {
+                icon.src = iconPlay;
+                icon.classList.add('rotating');
+              }
+              if (toggleBtn) toggleBtn.classList.add('rippling');
+            }).catch(() => {
+              // Browser autoplay policy will allow on first user interaction
+            });
           }
-          if (toggleBtn) toggleBtn.classList.add('rippling');
-        }).catch(() => {
-          // Browser autoplay policy will allow on first user interaction
-        });
+        }
       }
     };
     ensureMusicAutoplay();
@@ -520,8 +541,40 @@ function doGet(e) {
     }
 
     // 2. Gift Box Popup & Backdrop management:
-    // DO NOT attach duplicate click on GROUP22 - let LadiPage handle opening POPUP2 natively!
-    // We attach thorough, foolproof close handlers so overlay is NEVER stuck!
+    // Ensures dark overlay rgba(0, 0, 0, 0.6) reliably persists on 1st, 2nd, 3rd, and all subsequent opens
+    const showGiftBackdrop = () => {
+      let backdrop = document.getElementById('backdrop-popup');
+      if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.id = 'backdrop-popup';
+        backdrop.className = 'backdrop-popup';
+        document.body.appendChild(backdrop);
+      }
+      backdrop.classList.remove('hidden');
+      backdrop.classList.add('active-backdrop');
+      backdrop.style.setProperty('display', 'block', 'important');
+      backdrop.style.setProperty('background-color', 'rgba(0, 0, 0, 0.6)', 'important');
+      backdrop.style.setProperty('position', 'fixed', 'important');
+      backdrop.style.setProperty('top', '0px', 'important');
+      backdrop.style.setProperty('left', '0px', 'important');
+      backdrop.style.setProperty('width', '100vw', 'important');
+      backdrop.style.setProperty('height', '100vh', 'important');
+      backdrop.style.setProperty('z-index', '90000080', 'important');
+      backdrop.style.setProperty('opacity', '1', 'important');
+      backdrop.style.setProperty('visibility', 'visible', 'important');
+      backdrop.style.setProperty('pointer-events', 'auto', 'important');
+      backdrop.style.setProperty('cursor', 'pointer', 'important');
+
+      const popup2 = document.getElementById('POPUP2');
+      if (popup2) {
+        popup2.classList.remove('hidden');
+        popup2.style.setProperty('display', 'block', 'important');
+        popup2.style.setProperty('visibility', 'visible', 'important');
+        popup2.style.setProperty('opacity', '1', 'important');
+        popup2.style.setProperty('z-index', '90000085', 'important');
+      }
+    };
+
     const closeGiftModal = (e?: Event) => {
       if (e) {
         try {
@@ -530,29 +583,24 @@ function doGet(e) {
         } catch (_) {}
       }
 
-      // Remove ANY and ALL style_popup tags injected by LadiPage
+      // Remove style_popup tags injected by LadiPage
       const stylePopup = document.getElementById('style_popup');
       if (stylePopup) {
         stylePopup.remove();
       }
-      document.querySelectorAll('style').forEach((s) => {
-        if (s.id === 'style_popup' || (s.innerHTML && s.innerHTML.includes('#backdrop-popup') && s.innerHTML.includes('!important'))) {
-          s.remove();
-        }
-      });
 
-      // Force-hide backdrop-popup completely
+      // Hide backdrop-popup
       const backdrop = document.getElementById('backdrop-popup');
       if (backdrop) {
-        backdrop.style.setProperty('display', 'none', 'important');
-        backdrop.style.removeProperty('background-color');
-        backdrop.style.removeProperty('opacity');
+        backdrop.classList.remove('active-backdrop');
         backdrop.classList.add('hidden');
+        backdrop.style.setProperty('display', 'none', 'important');
       }
 
-      // Force-hide POPUP2
+      // Hide POPUP2
       const popup2 = document.getElementById('POPUP2');
       if (popup2) {
+        popup2.classList.add('hidden');
         popup2.style.setProperty('display', 'none', 'important');
         popup2.removeAttribute('data-popup-backdrop');
         popup2.removeAttribute('data-scroll');
@@ -578,26 +626,66 @@ function doGet(e) {
       document.body.style.removeProperty('overflow');
     };
 
-    // Global capture-phase listener: intercepts clicks on .popup-close, .ladi-overlay, or #backdrop-popup
-    const handleGlobalClickCapture = (e: MouseEvent | TouchEvent) => {
+    // 2. Gift Box Popup & Backdrop management:
+    const handleOpenGiftModal = (e?: Event) => {
+      if (e) {
+        try {
+          e.stopPropagation();
+          e.preventDefault();
+        } catch (_) {}
+      }
+      // Suppress legacy LadiPage POPUP2 & backdrop-popup so only React modal renders
+      const p2 = document.getElementById('POPUP2');
+      if (p2) {
+        p2.classList.add('hidden');
+        p2.style.setProperty('display', 'none', 'important');
+      }
+      const bd = document.getElementById('backdrop-popup');
+      if (bd) {
+        bd.classList.add('hidden');
+        bd.style.setProperty('display', 'none', 'important');
+      }
+      const st = document.getElementById('style_popup');
+      if (st) st.remove();
+
+      setIsGiftModalOpen(true);
+    };
+    (window as any).__openGiftModal = handleOpenGiftModal;
+
+    // Attach listeners on open triggers
+    const triggerIds = ['GROUP22', 'BUTTON4', 'BUTTON_TEXT4', 'SHAPE7'];
+    triggerIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('click', handleOpenGiftModal);
+        el.addEventListener('touchend', handleOpenGiftModal);
+      }
+    });
+
+    // Strictly handle clicks on the gift box triggers (GROUP22, BUTTON4, BUTTON_TEXT4, SHAPE7)
+    const handleDocClickForGift = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
-      if (
-        target.classList.contains('popup-close') ||
-        target.closest('.popup-close') ||
-        target.classList.contains('ladi-overlay') ||
-        target.id === 'backdrop-popup'
-      ) {
-        closeGiftModal(e);
+      const isGiftTrigger =
+        target.id === 'GROUP22' ||
+        !!target.closest('#GROUP22') ||
+        target.id === 'BUTTON4' ||
+        !!target.closest('#BUTTON4') ||
+        target.id === 'BUTTON_TEXT4' ||
+        !!target.closest('#BUTTON_TEXT4') ||
+        target.id === 'SHAPE7' ||
+        !!target.closest('#SHAPE7');
+
+      if (isGiftTrigger) {
+        handleOpenGiftModal(e);
       }
     };
-
-    document.addEventListener('click', handleGlobalClickCapture, true);
-    document.addEventListener('touchend', handleGlobalClickCapture, true);
+    document.addEventListener('click', handleDocClickForGift, true);
+    document.addEventListener('touchend', handleDocClickForGift, true);
 
     const handleEscapeKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        closeGiftModal(e);
+        setIsGiftModalOpen(false);
         setThankYouModal(null);
       }
     };
@@ -807,7 +895,15 @@ function doGet(e) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keydown', handleEscapeKey);
-      document.removeEventListener('click', handleGlobalClickCapture, true);
+      document.removeEventListener('click', handleDocClickForGift, true);
+      document.removeEventListener('touchend', handleDocClickForGift, true);
+      triggerIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.removeEventListener('click', handleOpenGiftModal);
+          el.removeEventListener('touchend', handleOpenGiftModal);
+        }
+      });
       window.removeEventListener('scroll', revealAllAnimatedElements);
       window.removeEventListener('touchmove', revealAllAnimatedElements);
       clearInterval(revealInterval);
@@ -1176,6 +1272,154 @@ function doGet(e) {
         <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[99999999] bg-stone-900/95 backdrop-blur-md text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 text-sm font-medium border border-stone-700 animate-in fade-in slide-in-from-top duration-300">
           <Sparkles className="w-4 h-4 text-amber-400 shrink-0 animate-spin" />
           <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Wedding Gift Modal (Mừng Cưới Chú Rể Đức Ánh & Cô Dâu Phương Thảo) */}
+      {isGiftModalOpen && (
+        <div
+          id="react-wedding-gift-modal"
+          onClick={() => setIsGiftModalOpen(false)}
+        >
+          <div
+            className="wedding-gift-card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button X */}
+            <button
+              onClick={() => setIsGiftModalOpen(false)}
+              className="gift-close-btn"
+              aria-label="Đóng"
+              title="Đóng hộp quà"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Header */}
+            <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+              <span className="gift-tag-badge">
+                Mừng Cưới Tân Lang &amp; Tân Nương
+              </span>
+              <h3 className="gift-main-title">
+                Hộp Quà Mừng Cưới
+              </h3>
+              <p className="gift-main-desc">
+                Gửi trao yêu thương &amp; lời chúc phúc đến Chú Rể &amp; Cô Dâu
+              </p>
+            </div>
+
+            {/* 2 Side-by-side Gift Cards */}
+            <div className="gift-grid">
+              {/* Bên Chú Rể */}
+              <div className="gift-side-box groom">
+                <div className="gift-box-header">
+                  <div className="gift-box-header-title">
+                    <span>🎩</span>
+                    <span>BÊN CHÚ RỂ</span>
+                  </div>
+                  <div className="gift-box-header-sub">
+                    (Mừng cưới Chú Rể)
+                  </div>
+                </div>
+
+                <div className="gift-box-content">
+                  <div className="gift-qr-container">
+                    <img
+                      src={config.groomQrUrl}
+                      alt="QR Chú Rể"
+                      className="gift-qr-img"
+                    />
+                  </div>
+                  <p className="gift-qr-instruction">
+                    Quét mã QR chuyển khoản
+                  </p>
+
+                  <div className="gift-info-lines">
+                    <div className="gift-ctk-text" title={config.groomBankOwner}>
+                      CTK: {config.groomBankOwner}
+                    </div>
+                    <div className="gift-stk-text">
+                      STK: {config.groomBankNumber}
+                    </div>
+                    <div className="gift-bank-text">
+                      NN: {config.groomBankName}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(config.groomBankNumber).then(() => {
+                        showToast(`✓ Đã sao chép STK Chú rể: ${config.groomBankNumber}`);
+                      });
+                    }}
+                    className="gift-copy-action-btn"
+                  >
+                    <span>📋</span>
+                    <span>Sao chép STK</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Bên Cô Dâu */}
+              <div className="gift-side-box bride">
+                <div className="gift-box-header">
+                  <div className="gift-box-header-title">
+                    <span>👰</span>
+                    <span>BÊN CÔ DÂU</span>
+                  </div>
+                  <div className="gift-box-header-sub">
+                    (Mừng cưới Cô Dâu)
+                  </div>
+                </div>
+
+                <div className="gift-box-content">
+                  <div className="gift-qr-container">
+                    <img
+                      src={config.brideQrUrl}
+                      alt="QR Cô Dâu"
+                      className="gift-qr-img"
+                    />
+                  </div>
+                  <p className="gift-qr-instruction">
+                    Quét mã QR chuyển khoản
+                  </p>
+
+                  <div className="gift-info-lines">
+                    <div className="gift-ctk-text" title={config.brideBankOwner}>
+                      CTK: {config.brideBankOwner}
+                    </div>
+                    <div className="gift-stk-text">
+                      STK: {config.brideBankNumber}
+                    </div>
+                    <div className="gift-bank-text">
+                      NN: {config.brideBankName}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(config.brideBankNumber).then(() => {
+                        showToast(`✓ Đã sao chép STK Cô dâu: ${config.brideBankNumber}`);
+                      });
+                    }}
+                    className="gift-copy-action-btn"
+                  >
+                    <span>📋</span>
+                    <span>Sao chép STK</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Note Quote banner matching image_5460a5a1.png */}
+            <div className="gift-quote-banner">
+              <span className="gift-quote-text">
+                ✨ Sự hiện diện và lời chúc phúc của quý khách là món quà quý giá nhất dành cho chúng tôi! ✨
+              </span>
+            </div>
+          </div>
         </div>
       )}
 
@@ -1755,7 +1999,7 @@ function doGet(e) {
                           className="w-full mt-1 bg-stone-900 border border-stone-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
                         />
                       </div>
-                      <p className="text-xs text-stone-400">Mặc định: "50 Năm Về Sau.mp3".</p>
+                      <p className="text-xs text-stone-400">Mặc định: "Beautiful in White" (Shane Filan - Westlife).</p>
                     </div>
 
                     {/* Lời Cảm Ơn Cuối Thiệp (Thank You) */}
