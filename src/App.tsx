@@ -116,7 +116,7 @@ const DEFAULT_CONFIG: WeddingConfig = {
   groomPartyAddress: 'Sn 4, Xóm Dốc Ao Thuyền,\nThôn Canh Nậu 2, Tây Phương, Hà Nội',
   groomMapsUrl: 'https://maps.app.goo.gl/d4oj1nqgekesFoYG6?g_st=iz',
   bridePartyAddress: 'Thôn Tích Giang 1, Xã Phúc Thọ, TP Hà Nội',
-  brideMapsUrl: 'https://maps.app.goo.gl/4vXb8imUK9uh2Qmu9?g_st=iz',
+  brideMapsUrl: 'https://maps.app.goo.gl/4vXb8imUK9uh2QmU9?g_st=iz',
 
   // Lời cảm ơn cuối thiệp (Thank You)
   thankYouTitle: 'Thank You',
@@ -199,10 +199,12 @@ export default function App() {
         const parsed = JSON.parse(saved);
         if (parsed.groomName && parsed.groomName !== 'Văn Thái') {
           const isOldMusic = !parsed.musicUrl || parsed.musicUrl.includes('50%20N') || parsed.musicUrl.includes('50 Năm Về Sau');
+          const isOldBrideMap = !parsed.brideMapsUrl || parsed.brideMapsUrl.includes('4vXb8imUK9uh2Qmu9');
           return {
             ...DEFAULT_CONFIG,
             ...parsed,
             musicUrl: isOldMusic ? '/audio/beautiful-in-white.mp3' : parsed.musicUrl,
+            brideMapsUrl: isOldBrideMap ? 'https://maps.app.goo.gl/4vXb8imUK9uh2QmU9?g_st=iz' : parsed.brideMapsUrl,
             googleSheetUrl: parsed.googleSheetUrl || DEFAULT_CONFIG.googleSheetUrl,
           };
         }
@@ -371,6 +373,26 @@ function doGet(e) {
       setIsTestingSheet(false);
     }
   };
+
+  // Khóa scroll trang khi mở modal mừng cưới, cảm ơn, hoặc chỉnh sửa
+  useEffect(() => {
+    const isAnyModalOpen = isGiftModalOpen || Boolean(thankYouModal?.open) || isOpenModal;
+    if (isAnyModalOpen) {
+      const prevBodyOverflow = document.body.style.overflow;
+      const prevDocOverflow = document.documentElement.style.overflow;
+      document.body.style.setProperty('overflow', 'hidden', 'important');
+      document.documentElement.style.setProperty('overflow', 'hidden', 'important');
+      document.body.classList.add('modal-open-scroll-lock');
+      document.documentElement.classList.add('modal-open-scroll-lock');
+
+      return () => {
+        document.body.style.overflow = prevBodyOverflow;
+        document.documentElement.style.overflow = prevDocOverflow;
+        document.body.classList.remove('modal-open-scroll-lock');
+        document.documentElement.classList.remove('modal-open-scroll-lock');
+      };
+    }
+  }, [isGiftModalOpen, thankYouModal?.open, isOpenModal]);
 
   useEffect(() => {
     // Check if user requested admin/source modal via URL query param ?code=true or ?admin=true
@@ -967,7 +989,7 @@ function doGet(e) {
 
       const btnBrideMaps = document.getElementById('BUTTON10') as HTMLAnchorElement;
       if (btnBrideMaps) {
-        btnBrideMaps.href = newConfig.brideMapsUrl || newConfig.mapsUrl || 'https://maps.app.goo.gl/4vXb8imUK9uh2Qmu9?g_st=iz';
+        btnBrideMaps.href = newConfig.brideMapsUrl || newConfig.mapsUrl || 'https://maps.app.goo.gl/4vXb8imUK9uh2QmU9?g_st=iz';
       }
 
       // Update Dates across the invitation card
@@ -1269,7 +1291,11 @@ function doGet(e) {
     <>
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[99999999] bg-stone-900/95 backdrop-blur-md text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 text-sm font-medium border border-stone-700 animate-in fade-in slide-in-from-top duration-300">
+        <div
+          id="react-toast-notification"
+          className="fixed top-5 left-1/2 -translate-x-1/2 bg-stone-900/95 backdrop-blur-md text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 text-sm font-medium border border-stone-700 animate-in fade-in slide-in-from-top duration-300 pointer-events-auto"
+          style={{ zIndex: 2147483647 }}
+        >
           <Sparkles className="w-4 h-4 text-amber-400 shrink-0 animate-spin" />
           <span>{toastMessage}</span>
         </div>

@@ -139,7 +139,7 @@ body {
   bottom: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: 2147483647 !important;
+  z-index: 2147483600 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -385,7 +385,7 @@ body {
   bottom: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: 2147483647 !important;
+  z-index: 2147483600 !important;
   background-color: rgba(18, 12, 10, 0.74) !important;
   backdrop-filter: blur(6px) !important;
   -webkit-backdrop-filter: blur(6px) !important;
@@ -733,4 +733,35 @@ body {
   margin: 0 !important;
   display: block !important;
 }
+
+/* ==========================================================================
+   SCROLL LOCK & TOAST NOTIFICATION OVERLAY ENHANCEMENTS
+   ========================================================================== */
+
+/* Toast notification floats above all modals and popups */
+#react-toast-notification {
+  z-index: 2147483647 !important;
+  pointer-events: auto !important;
+}
+
+/* Prevent outer body / page scroll when any modal is open */
+html.modal-open-scroll-lock,
+body.modal-open-scroll-lock {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+/* Allow smooth touch and scroll inside the modal content cards */
+#react-wedding-gift-modal,
+#wedding-thankyou-modal {
+  touch-action: pan-y !important;
+  overscroll-behavior: contain !important;
+}
+
+#react-wedding-gift-modal .wedding-gift-card,
+#wedding-thankyou-modal .modal-card {
+  touch-action: pan-y !important;
+  overscroll-behavior: contain !important;
+}
+
 
